@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
   name: "mlx-audio",
-  platforms: [.macOS("15.4"), .iOS("18.4")],
+  platforms: [.macOS(.v15), .iOS(.v17)],
   products: [
     // Core library without Kokoro (no GPLv3 dependencies)
     .library(
