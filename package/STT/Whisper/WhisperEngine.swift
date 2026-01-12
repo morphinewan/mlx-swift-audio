@@ -87,6 +87,8 @@ public final class WhisperEngine: STTEngine {
   ///   - language: Language of the audio (nil = auto-detect)
   ///   - temperature: Sampling temperature (0.0 = greedy, higher = more random)
   ///   - timestamps: Timestamp granularity
+  ///   - noSpeechThreshold: Skip segments with no_speech_prob > threshold (default: 0.6)
+  ///   - logprobThreshold: Skip segments with avg_logprob < threshold (default: -1.0)
   ///   - hallucinationSilenceThreshold: When word timestamps are enabled, skip silent periods
   ///     longer than this threshold (in seconds) when a possible hallucination is detected.
   ///     Set to nil (default) to disable hallucination filtering.
@@ -96,6 +98,8 @@ public final class WhisperEngine: STTEngine {
     language: Language? = nil,
     temperature: Float = 0.0,
     timestamps: TimestampGranularity = .segment,
+    noSpeechThreshold: Float? = 0.6,
+    logprobThreshold: Float? = -1.0,
     hallucinationSilenceThreshold: Float? = nil,
     progressHandler: (@Sendable (Double) -> Void)? = nil
   ) async throws -> TranscriptionResult {
@@ -124,6 +128,8 @@ public final class WhisperEngine: STTEngine {
       task: .transcribe,
       temperature: temperature,
       timestamps: timestamps,
+      noSpeechThreshold: noSpeechThreshold,
+      logprobThreshold: logprobThreshold,
       hallucinationSilenceThreshold: effectiveHallucinationThreshold,
       progressHandler: progressHandler
     )
@@ -140,6 +146,8 @@ public final class WhisperEngine: STTEngine {
   ///   - language: Language of the audio (nil = auto-detect)
   ///   - temperature: Sampling temperature (0.0 = greedy, higher = more random)
   ///   - timestamps: Timestamp granularity
+  ///   - noSpeechThreshold: Skip segments with no_speech_prob > threshold (default: 0.6)
+  ///   - logprobThreshold: Skip segments with avg_logprob < threshold (default: -1.0)
   ///   - hallucinationSilenceThreshold: When word timestamps are enabled, skip silent periods
   ///     longer than this threshold (in seconds) when a possible hallucination is detected.
   ///     Set to nil (default) to disable hallucination filtering.
@@ -149,6 +157,8 @@ public final class WhisperEngine: STTEngine {
     language: Language? = nil,
     temperature: Float = 0.0,
     timestamps: TimestampGranularity = .segment,
+    noSpeechThreshold: Float? = 0.6,
+    logprobThreshold: Float? = -1.0,
     hallucinationSilenceThreshold: Float? = nil,
     progressHandler: (@Sendable (Double) -> Void)? = nil
   ) async throws -> TranscriptionResult {
@@ -174,6 +184,8 @@ public final class WhisperEngine: STTEngine {
       task: .transcribe,
       temperature: temperature,
       timestamps: timestamps,
+      noSpeechThreshold: noSpeechThreshold,
+      logprobThreshold: logprobThreshold,
       hallucinationSilenceThreshold: effectiveHallucinationThreshold,
       progressHandler: progressHandler
     )
