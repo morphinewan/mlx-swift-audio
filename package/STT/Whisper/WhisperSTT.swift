@@ -124,7 +124,8 @@ actor WhisperSTT {
     noSpeechThreshold: Float? = 0.6,
     logprobThreshold: Float? = -1.0,
     compressionRatioThreshold: Float? = 2.4,
-    hallucinationSilenceThreshold: Float? = nil
+    hallucinationSilenceThreshold: Float? = nil,
+    progressHandler: (@Sendable (Double) -> Void)? = nil
   ) -> TranscriptionResult {
     let transcribeStartTime = CFAbsoluteTimeGetCurrent()
 
@@ -169,6 +170,10 @@ actor WhisperSTT {
     var lastSpeechTimestamp: Float = 0.0
 
     while seek < contentFrames {
+      // Report progress
+      let progress = Double(seek) / Double(contentFrames)
+      progressHandler?(progress)
+
       let timeOffset = Float(seek * hopLength) / Float(sampleRate)
       let windowEndTime = Float((seek + nFrames) * hopLength) / Float(sampleRate)
       let segmentSize = min(nFrames, contentFrames - seek)
@@ -610,6 +615,8 @@ actor WhisperSTT {
     let totalTime = transcribeEndTime - transcribeStartTime
 
     Log.model.info("Transcription complete: \(String(format: "%.2f", totalTime))s for \(String(format: "%.2f", audioDuration))s audio (RTF: \(String(format: "%.2f", totalTime / audioDuration)))")
+
+    progressHandler?(1.0)
 
     return TranscriptionResult(
       text: fullText,

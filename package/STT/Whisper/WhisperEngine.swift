@@ -96,7 +96,8 @@ public final class WhisperEngine: STTEngine {
     language: Language? = nil,
     temperature: Float = 0.0,
     timestamps: TimestampGranularity = .segment,
-    hallucinationSilenceThreshold: Float? = nil
+    hallucinationSilenceThreshold: Float? = nil,
+    progressHandler: (@Sendable (Double) -> Void)? = nil
   ) async throws -> TranscriptionResult {
     guard await isLoaded, let whisperSTT = await whisperSTT else {
       throw STTError.modelNotLoaded
@@ -123,7 +124,8 @@ public final class WhisperEngine: STTEngine {
       task: .transcribe,
       temperature: temperature,
       timestamps: timestamps,
-      hallucinationSilenceThreshold: effectiveHallucinationThreshold
+      hallucinationSilenceThreshold: effectiveHallucinationThreshold,
+      progressHandler: progressHandler
     )
 
     await MainActor.run { transcriptionTime = result.processingTime }
@@ -147,7 +149,8 @@ public final class WhisperEngine: STTEngine {
     language: Language? = nil,
     temperature: Float = 0.0,
     timestamps: TimestampGranularity = .segment,
-    hallucinationSilenceThreshold: Float? = nil
+    hallucinationSilenceThreshold: Float? = nil,
+    progressHandler: (@Sendable (Double) -> Void)? = nil
   ) async throws -> TranscriptionResult {
     guard await isLoaded, let whisperSTT = await whisperSTT else {
       throw STTError.modelNotLoaded
@@ -171,7 +174,8 @@ public final class WhisperEngine: STTEngine {
       task: .transcribe,
       temperature: temperature,
       timestamps: timestamps,
-      hallucinationSilenceThreshold: effectiveHallucinationThreshold
+      hallucinationSilenceThreshold: effectiveHallucinationThreshold,
+      progressHandler: progressHandler
     )
 
     await MainActor.run { transcriptionTime = result.processingTime }
@@ -189,7 +193,8 @@ public final class WhisperEngine: STTEngine {
   public nonisolated func translate(
     _ url: URL,
     language: Language? = nil,
-    timestamps: TimestampGranularity = .segment
+    timestamps: TimestampGranularity = .segment,
+    progressHandler: (@Sendable (Double) -> Void)? = nil
   ) async throws -> TranscriptionResult {
     guard await isLoaded, let whisperSTT = await whisperSTT else {
       throw STTError.modelNotLoaded
@@ -215,7 +220,8 @@ public final class WhisperEngine: STTEngine {
       temperature: 0.0,
       timestamps: timestamps,
       logprobThreshold: nil,
-      hallucinationSilenceThreshold: timestamps == .word ? 2.0 : nil
+      hallucinationSilenceThreshold: timestamps == .word ? 2.0 : nil,
+      progressHandler: progressHandler
     )
 
     await MainActor.run { transcriptionTime = result.processingTime }
@@ -233,7 +239,8 @@ public final class WhisperEngine: STTEngine {
   public nonisolated func translate(
     _ audio: sending MLXArray,
     language: Language? = nil,
-    timestamps: TimestampGranularity = .segment
+    timestamps: TimestampGranularity = .segment,
+    progressHandler: (@Sendable (Double) -> Void)? = nil
   ) async throws -> TranscriptionResult {
     guard await isLoaded, let whisperSTT = await whisperSTT else {
       throw STTError.modelNotLoaded
@@ -256,7 +263,8 @@ public final class WhisperEngine: STTEngine {
       temperature: 0.0,
       timestamps: timestamps,
       logprobThreshold: nil,
-      hallucinationSilenceThreshold: timestamps == .word ? 2.0 : nil
+      hallucinationSilenceThreshold: timestamps == .word ? 2.0 : nil,
+      progressHandler: progressHandler
     )
 
     await MainActor.run { transcriptionTime = result.processingTime }
